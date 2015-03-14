@@ -88,7 +88,9 @@ func (d *Driver) GetURL() (string, error) {
 }
 
 func (d *Driver) GetState() (state.State, error) {
-	return state.None, nil
+	//NOTE: this is due the fact, that Kitematic recognizes onl running machines
+	//TODO: refactor and detect real machine state
+	return state.Running, nil
 }
 
 func (d *Driver) GetProviderType() provider.ProviderType {
