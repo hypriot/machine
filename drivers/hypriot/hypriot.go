@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/codegangsta/cli"
-	"github.com/docker/docker/api"
 	"github.com/docker/machine/drivers"
 	"github.com/docker/machine/provider"
 	"github.com/docker/machine/state"
@@ -13,7 +12,7 @@ import (
 // The `hypriot` driver is used to control any Hypriot related
 // Docker Host, like a Raspberry Pi connected through ssh.
 type Driver struct {
-	URL string
+	IPAddress string
 }
 
 func init() {
@@ -26,8 +25,8 @@ func init() {
 func GetCreateFlags() []cli.Flag {
 	return []cli.Flag{
 		cli.StringFlag{
-			Name:  "hypriot-docker-url",
-			Usage: "URL of host when no driver is selected",
+			Name:  "hypriot-docker-ipaddress",
+			Usage: "IP address of the Docker Host",
 			Value: "",
 		},
 	}
@@ -54,7 +53,10 @@ func (d *Driver) DriverName() string {
 }
 
 func (d *Driver) GetIP() (string, error) {
-	return "", nil
+	if d.IPAddress == "" {
+		return "", fmt.Errorf("IP address is not set")
+	}
+	return d.IPAddress, nil
 }
 
 func (d *Driver) GetMachineName() string {
@@ -78,7 +80,11 @@ func (d *Driver) GetSSHUsername() string {
 }
 
 func (d *Driver) GetURL() (string, error) {
-	return d.URL, nil
+	ip, err := d.GetIP()
+	if err != nil {
+		return "", err
+	}
+	return fmt.Sprintf("tcp://%s:2376", ip), nil
 }
 
 func (d *Driver) GetState() (state.State, error) {
@@ -106,17 +112,15 @@ func (d *Driver) Restart() error {
 }
 
 func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
-	url := flags.String("hypriot-docker-url")
+	ip := flags.String("hypriot-docker-ipaddress")
 
-	if url == "" {
-		return fmt.Errorf("--hypriot-docker-url option is required when no driver is selected")
+	if ip == "" {
+		return fmt.Errorf("--hypriot-docker-ipaddress option is required")
 	}
-	validatedUrl, err := api.ValidateHost(url)
-	if err != nil {
-		return err
-	}
+	//TODO: validate IPv4 address
 
-	d.URL = validatedUrl
+	d.IPAddress = ip
+
 	return nil
 }
 
