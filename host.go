@@ -131,6 +131,9 @@ func (h *Host) ConfigureSwarm(discovery string, master bool, host string, addr s
 	if d.DriverName() == "none" {
 		return nil
 	}
+	if d.DriverName() == "hypriot" {
+		return nil
+	}
 
 	if addr == "" {
 		ip, err := d.GetIP()
@@ -266,6 +269,9 @@ func (h *Host) ConfigureAuth() error {
 	d := h.Driver
 
 	if d.DriverName() == "none" {
+		return nil
+	}
+	if d.DriverName() == "hypriot" {
 		return nil
 	}
 
@@ -505,6 +511,8 @@ func (h *Host) Provision() error {
 	// "local" providers use b2d; no provisioning necessary
 	switch h.Driver.DriverName() {
 	case "none", "virtualbox", "vmwarefusion", "vmwarevsphere":
+		return nil
+	case "hypriot":
 		return nil
 	}
 
