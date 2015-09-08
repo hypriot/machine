@@ -132,7 +132,7 @@ func (provisioner *HypriotProvisioner) setHostnameHypriot(hostname string) error
 }
 
 func (provisioner *HypriotProvisioner) setHypriotAptRepo() error {
-	if _, err := provisioner.SSHCommand("if [ ! -f /etc/apt/sources.list.d/hypriot.list ] || grep -q repository.hypriot.com /etc/apt/sources.list.d/hypriot.list; then (curl https://packagecloud.io/gpg.key | sudo apt-key add -); echo 'deb http://packagecloud.io/Hypriot/Schatzkiste/debian/ wheezy main' | sudo tee /etc/apt/sources.list.d/hypriot.list; fi"); err != nil {
+	if _, err := provisioner.SSHCommand("if [ ! -f /etc/apt/sources.list.d/hypriot.list ] || grep -q repository.hypriot.com /etc/apt/sources.list.d/hypriot.list; then (curl https://packagecloud.io/gpg.key | sudo apt-key add -); echo 'deb https://packagecloud.io/Hypriot/Schatzkiste/debian/ wheezy main' | sudo tee /etc/apt/sources.list.d/hypriot.list; fi"); err != nil {
 		return err
 	}
 
@@ -154,6 +154,11 @@ func (provisioner *HypriotProvisioner) Provision(swarmOptions swarm.SwarmOptions
 	}
 
 	if err := provisioner.setHostnameHypriot(provisioner.Driver.GetMachineName()); err != nil {
+		return err
+	}
+
+	log.Debug("installing apt-transport-https")
+	if err := provisioner.Package("apt-transport-https", pkgaction.Install); err != nil {
 		return err
 	}
 
