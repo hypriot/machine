@@ -159,7 +159,8 @@ copy_binary_to_upload_folder:
 	@echo $(BINARY_NAME)
 	mkdir -p $(BUILD_DIR)/binary/
 #	cd $(GOPATH)/src/github.com/docker/swarm && \
-	$(foreach dir,$(wildcard $(BINARY_NAME)_*),$(shell cp $(dir) $(BUILD_DIR)/binary/))
+	$(foreach dir,$(wildcard $(BINARY_NAME)_*),$(shell ls -l $(dir)))
+#	$(foreach dir,$(wildcard $(BINARY_NAME)_*),$(shell cp $(dir) $(BUILD_DIR)/binary/))
 	ls -la
 	ls -la $(BINARY_NAME)_*
 	ls -la $(BUILD_DIR)/binary/
