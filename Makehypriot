@@ -170,14 +170,14 @@ copy_deb_to_upload_folder:
 	cp -r builds/* $(BUILD_DIR)/package/
 
 create_package_sha256_checksums:
-	echo create checksums
+	@echo create checksums
 	find_files = $(notdir $(wildcard $(BUILD_DIR)/package/*))
 	echo $(foreach dir,$(find_files),$(shell cd $(BUILD_DIR)/package && shasum -a 256 $(dir) >> $(dir).sha256))
 
 create_binary_sha256_checksums:
-	echo create checksums
-	find_files = $(notdir $(wildcard $(BUILD_DIR)/binary/*))
-	echo $(foreach dir,$(find_files),$(shell cd $(BUILD_DIR)/binary && shasum -a 256 $(dir) >> $(dir).sha256))
+	@echo create checksums
+	$(eval find_files = $(notdir $(wildcard $(BUILD_DIR)/binary/*)))
+	@echo $(foreach dir,$(find_files),$(shell cd $(BUILD_DIR)/binary && shasum -a 256 $(dir) >> $(dir).sha256))
 
 build_debian_package:
 	echo "build debian package"
