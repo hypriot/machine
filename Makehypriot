@@ -1,7 +1,8 @@
 # repo name
 #BINARY_NAME = $(git log --oneline --name-status -1 | grep "^M\s\|^A\s" | tail -1 | dirname `awk -F " " '{print $2}'`)
 BINARY_NAME ?= $(shell basename `git rev-parse --show-toplevel`)
-BINARY_NAME := "docker-machine"
+
+BINARY_NAME = docker-machine
 
 DATE := $(shell date -Idate)
 #$(shell date +"%Y-%m-%d_%H%M")
@@ -158,6 +159,8 @@ copy_binary_to_upload_folder:
 	mkdir -p $(BUILD_DIR)/binary/
 #	cd $(GOPATH)/src/github.com/docker/swarm && \
 	cp $(BINARY_NAME)_* $(BUILD_DIR)/binary/
+	ls -la
+	ls -la $(BUILD_DIR)/binary/
 
 #	cd $(BUILD_DIR)/binary/ && \
 #	shasum -a 256 $(BINARY_NAME) > $(BINARY_NAME).sha256
@@ -177,6 +180,7 @@ create_binary_sha256_checksums:
 	@echo create checksums
 	$(eval find_files = $(notdir $(wildcard $(BUILD_DIR)/binary/*)))
 	@echo $(foreach dir,$(find_files),$(shell cd $(BUILD_DIR)/binary && shasum -a 256 $(dir) >> $(dir).sha256))
+	ls -la $(BUILD_DIR)/binary/
 
 build_debian_package:
 	echo "build debian package"
