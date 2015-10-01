@@ -1,6 +1,6 @@
 # repo name
 #BINARY_NAME = $(git log --oneline --name-status -1 | grep "^M\s\|^A\s" | tail -1 | dirname `awk -F " " '{print $2}'`)
-BINARY_NAME ?= $(shell basename `git rev-parse --show-toplevel`)
+#BINARY_NAME ?= $(shell basename `git rev-parse --show-toplevel`)
 
 BINARY_NAME = docker-machine
 
@@ -156,10 +156,11 @@ upload_to_packagecloud:
 	curl -X POST https://$(PACKAGECLOUD_API_TOKEN):@packagecloud.io/api/v1/repos/$(PACKAGECLOUD_USER_REPO)/packages.json 	     -F "package[distro_version_id]=24" -F "package[package_file]=@$(BUILD_DIR)/package/$(PACKAGE_NAME).deb"
 
 copy_binary_to_upload_folder:
+	@echo $(BINARY_NAME)
 	mkdir -p $(BUILD_DIR)/binary/
 #	cd $(GOPATH)/src/github.com/docker/swarm && \
-	cp $(BINARY_NAME)_* $(BUILD_DIR)/binary/
-	ls -la
+	cp "$(BINARY_NAME)_*" $(BUILD_DIR)/binary/
+	ls -la "$(BINARY_NAME)_*"
 	ls -la $(BUILD_DIR)/binary/
 
 #	cd $(BUILD_DIR)/binary/ && \
