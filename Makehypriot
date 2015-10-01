@@ -4,8 +4,8 @@
 
 BINARY_NAME = docker-machine
 
-DATE := $(shell date -Idate)
-#$(shell date +"%Y-%m-%d_%H%M")
+#DATE := $(shell date -Idate)
+DATE := $(shell date +"%Y-%m-%d_%H%M")
 #$(shell date +"%Y%m%d%H%M")
 COMMIT_HASH := $(shell git rev-parse --short HEAD)
 #$(shell git log --pretty=format:'%h' -n 1)
@@ -159,8 +159,8 @@ copy_binary_to_upload_folder:
 	@echo $(BINARY_NAME)
 	mkdir -p $(BUILD_DIR)/binary/
 #	cd $(GOPATH)/src/github.com/docker/swarm && \
-	$(foreach dir,$(wildcard $(BINARY_NAME)_*),$(shell ls -l $(dir)))
-#	$(foreach dir,$(wildcard $(BINARY_NAME)_*),$(shell cp $(dir) $(BUILD_DIR)/binary/))
+	$(foreach dir,$(wildcard $(BINARY_NAME)_*),$(ls -l $(dir)))
+#	$(foreach dir,$(wildcard $(BINARY_NAME)_*),$(cp $(dir) $(BUILD_DIR)/binary/))
 	ls -la
 	ls -la $(BINARY_NAME)_*
 	ls -la $(BUILD_DIR)/binary/
