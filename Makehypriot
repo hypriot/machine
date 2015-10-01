@@ -31,8 +31,7 @@ DEPENDENCIES :=	$(shell cat DEPENDENCIES)
 # url/s3 path to download from
 DOWNLOADPATH := $(shell cat DOWNLOADPATH)
 # folder to safe the results
-BUILD_DIR :=
-# $(BUILD_RESULTS)/$(BINARY_NAME)/$(DATE)_$(COMMIT_HASH)_$(VERSION)
+BUILD_DIR := $(BUILD_RESULTS)/$(BINARY_NAME)/$(DATE)_$(COMMIT_HASH)_$(VERSION)
 
 default: compile copy_binary_to_upload_folder create_binary_sha256_checksums 
 #build_debian_package create_package_sha256_checksums upload_to_packagecloud
