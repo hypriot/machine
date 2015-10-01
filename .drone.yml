@@ -23,8 +23,8 @@ publish:
     bucket: $$AWS_BUCKET
     access_key: $$AWS_ACCESS_KEY_ID
     secret_key: $$AWS_SECRET_ACCESS_KEY
-    source: $$BUILD_RESULTS
-    target: $$S3_PREFIX
+    source: $$BUILD_RESULTS/
+    target: $$S3_PREFIX/
     recursive: true
 notify:
   slack:
