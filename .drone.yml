@@ -1,38 +1,30 @@
-image: registry.hypriot.com/hypriot/dockerindocker
+image: registry.hypriot.com/armbuildchain/dockerindocker
 docker:
   volumes:
     - /var/run/docker.sock:/var/run/docker.sock
 git:
   path: github.com/hypriot/machine
+
 script:
   - echo "+++++ start docker daemon +++++"
   - wrapdocker &
   - sleep 5
-  - echo "+++++ build docker machine +++++"
-  - script/build
-  - export timestamp=$(date +"%Y%m%d%H%M")
-  - export VERSION=0.4.1
-  - export folder=/build/$VERSION-$timestamp/
-  - mkdir -p $folder
-  - mv docker-machine_darwin-amd64 $folder
-  - mv docker-machine_linux-amd64 $folder
-  - mv docker-machine_linux-arm $folder
-  - cd $folder
-  - shasum -a 256 docker-machine_darwin-amd64 >docker-machine_darwin-amd64.sha256
-  - shasum -a 256 docker-machine_linux-amd64 >docker-machine_linux-amd64.sha256
-  - shasum -a 256 docker-machine_linux-arm >docker-machine_linux-arm.sha256
+  - docker login --username=\$\$REGISTRY_USER --password=\$\$REGISTRY_PASSWORD --email=\$\$REGISTRY_USER_EMAIL \$\$REGISTRY_URL
+  - echo "+++++ build docker image +++++"
+  - make --file Makehypriot
   - echo "+++++ stop docker daemon +++++"
   - start-stop-daemon --stop --pidfile "/var/run/docker.pid"
-  - echo "#####################\n***** COMPLETED *****\n#####################"
+  - echo -e "#####################\n***** COMPLETED *****\n#####################"
+
 publish:
   s3:
     acl: public-read
-    region: eu-central-1
-    bucket: buildserver-production
+    region: $$AWS_DEFAULT_REGION
+    bucket: $$AWS_BUCKET
     access_key: $$AWS_ACCESS_KEY_ID
     secret_key: $$AWS_SECRET_ACCESS_KEY
-    source: $$BUILD_RESULTS/
-    target: docker-machine/
+    source: $$BUILD_RESULTS
+    target: $$S3_PREFIX
     recursive: true
 notify:
   slack:
