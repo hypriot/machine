@@ -158,7 +158,10 @@ upload_to_packagecloud:
 
 define mycopy
 @echo $(1)
-$(shell cp $(1) $(BUILD_DIR)/binary/)
+ls -la
+pwd
+@echo "param2 $(2)"
+cp $(2)/$(1) $(BUILD_DIR)/binary/
 endef
 
 copy_binary_to_upload_folder:
@@ -167,7 +170,7 @@ copy_binary_to_upload_folder:
 #	cd $(GOPATH)/src/github.com/docker/swarm && \
 	
 	$(eval filelist = $(shell ls -1 $(BINARY_NAME)_*))
-	$(foreach dir,$(filelist),$(call mycopy,$(dir)))
+	$(foreach dir,$(filelist),$(call mycopy,$(dir),$(shell pwd)))
 
 	ls -la
 	ls -la $(BINARY_NAME)_*
