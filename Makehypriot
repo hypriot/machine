@@ -160,8 +160,7 @@ define mycopy
 @echo $(1)
 ls -la
 pwd
-@echo "param2 $(2)"
-cp $(2)/$(1) $(BUILD_DIR)/binary/
+cp $(1) $(BUILD_DIR)/binary/
 endef
 
 copy_binary_to_upload_folder:
@@ -170,7 +169,8 @@ copy_binary_to_upload_folder:
 #	cd $(GOPATH)/src/github.com/docker/swarm && \
 	
 	$(eval filelist = $(shell ls -1 $(BINARY_NAME)_*))
-	$(foreach dir,$(filelist),$(call mycopy,$(dir),$(shell pwd)))
+#        $(eval find_files = $(notdir $(wildcard $(BINARY_NAME)_*)))
+	$(foreach dir,$(filelist),$(call mycopy,$(dir)))
 
 	ls -la
 	ls -la $(BINARY_NAME)_*
