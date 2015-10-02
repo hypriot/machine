@@ -155,13 +155,19 @@ upload_to_packagecloud:
 	# see documentation for this api call at https://packagecloud.io/docs/api#resource_packages_method_create
 	curl -X POST https://$(PACKAGECLOUD_API_TOKEN):@packagecloud.io/api/v1/repos/$(PACKAGECLOUD_USER_REPO)/packages.json 	     -F "package[distro_version_id]=24" -F "package[package_file]=@$(BUILD_DIR)/package/$(PACKAGE_NAME).deb"
 
+
+define mycopy
+ls -l $(1)
+cp $(1) $(BUILD_DIR)/binary/
+endef
+
 copy_binary_to_upload_folder:
 	@echo $(BINARY_NAME)
 	mkdir -p $(BUILD_DIR)/binary/
 #	cd $(GOPATH)/src/github.com/docker/swarm && \
-	@echo $(BINARY_NAME)_*
-	$(foreach dir,$(BINARY_NAME)_*,$(ls -l $(dir)))
-	$(foreach dir,$(BINARY_NAME)_*,$(shell cp $(dir) $(BUILD_DIR)/binary/))
+	
+	$(eval filelist = $(ls -1 $(BINARY_NAME)_*))
+	$(foreach dir,$(filelist),$(call mycopy,$(dir)))
 
 	ls -la
 	ls -la $(BINARY_NAME)_*
