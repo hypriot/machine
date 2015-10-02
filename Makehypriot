@@ -169,7 +169,7 @@ copy_binary_to_upload_folder:
 	
 	$(eval filelist = $(shell ls -1 $(BINARY_NAME)_*))
 #        $(eval find_files = $(notdir $(wildcard $(BINARY_NAME)_*)))
-	$(foreach dir,$(filelist),$(eval $(call mycopy,$(dir))))
+	$(foreach dir,$(filelist),$(call mycopy,$(dir)))
 
 #	ls -la
 #	ls -la $(BINARY_NAME)_*
