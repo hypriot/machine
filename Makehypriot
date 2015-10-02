@@ -157,9 +157,9 @@ upload_to_packagecloud:
 
 
 define mycopy
-(@echo copyfunction)
-(@echo "copy $(1) to $(BUILD_DIR)/binary/$(1)")
-(cp $(1) $(BUILD_DIR)/binary/$(1))
+@echo copyfunction && \
+echo "copy $(1) to $(BUILD_DIR)/binary/$(1)" && \
+cp $(1) $(BUILD_DIR)/binary/$(1)
 endef
 
 copy_binary_to_upload_folder:
