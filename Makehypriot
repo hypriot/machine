@@ -157,7 +157,7 @@ upload_to_packagecloud:
 
 
 define mycopy
-$(shell ls -l $(1))
+@echo $(1)
 $(shell cp $(1) $(BUILD_DIR)/binary/)
 endef
 
