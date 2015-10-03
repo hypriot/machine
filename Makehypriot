@@ -34,6 +34,9 @@ DOWNLOADPATH := $(shell cat DOWNLOADPATH)
 # folder to safe the results
 BUILD_DIR := $(BUILD_RESULTS)/$(BINARY_NAME)/$(DATE)_$(COMMIT_HASH)_$(VERSION)
 
+default: compile copy_binary_to_upload_folder
+
+
 default: compile copy_binary_to_upload_folder create_binary_sha256_checksums 
 #build_debian_package create_package_sha256_checksums upload_to_packagecloud
 
@@ -157,13 +160,14 @@ upload_to_packagecloud:
 
 
 define mycopy
-	@echo copy $(1)
+	@echo "copy $(1)"
+	@echo "$(BUILD_DIR)/binary"
 	$(shell mkdir -p $(BUILD_DIR)/binary/)
 	$(shell cp $(1) $(BUILD_DIR)/binary/)
 endef
 
 copy_binary_to_upload_folder:
-	
+	@echo "copy bins"
 #	$(eval filelist = $(shell ls $(BINARY_NAME)_*))
 	$(foreach dir,$(notdir $(wildcard $(BINARY_NAME)_*)),$(call mycopy,$(dir)))
 
