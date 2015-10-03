@@ -158,14 +158,14 @@ upload_to_packagecloud:
 
 define mycopy
 	@echo copyfunction
-	mkdir -p $(BUILD_DIR)/binary/
+	$(shell mkdir -p $(BUILD_DIR)/binary/)
 	@echo "copy $(1) to $(BUILD_DIR)/binary/"
 	$(shell cp $(1) $(BUILD_DIR)/binary/)
 endef
 
 copy_binary_to_upload_folder:
 	@echo $(BINARY_NAME)
-#	mkdir -p $(BUILD_DIR)/binary/
+	mkdir -p $(BUILD_DIR)/binary/
 
 #	touch $(BUILD_DIR)/binary/testtouch
 #	ls -la $(BINARY_NAME)_*
