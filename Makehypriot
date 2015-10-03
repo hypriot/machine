@@ -157,9 +157,9 @@ upload_to_packagecloud:
 
 
 define mycopy
-#@echo copyfunction
-#@echo "copy $(1) to $(BUILD_DIR)/binary/"
-$(shell cp -v $(1) $(BUILD_DIR)/binary/)
+	@echo copyfunction
+	@echo "copy $(1) to $(BUILD_DIR)/binary/"
+	$(shell cp -v $(1) $(BUILD_DIR)/binary/)
 endef
 
 copy_binary_to_upload_folder:
@@ -168,13 +168,12 @@ copy_binary_to_upload_folder:
 
 #	ls -la $(BINARY_NAME)_*
 	
-	$(eval filelist = $(shell ls $(BINARY_NAME)_*))
-	$(foreach dir,$(filelist),$(call mycopy,$(dir)))
+#	$(eval filelist = $(shell ls $(BINARY_NAME)_*))
+#	$(foreach dir,$(filelist),$(call mycopy,$(dir)))
 #	$(eval find_files = $(notdir $(wildcard $(BINARY_NAME)_*)))
 
 #	$(foreach dir2,$(notdir $(wildcard $(BINARY_NAME)_*)),$(shell echo $(dir2)))
-#	$(foreach dir2,$(notdir $(wildcard $(BINARY_NAME)_*)),$(shell cp $(dir2) $(BUILD_DIR)/binary/))
-
+	$(foreach dir2,$(notdir $(wildcard $(BINARY_NAME)_*)),$(shell cp $(dir2) $(BUILD_DIR)/binary/))
 
 #	cd $(BUILD_DIR)/binary/ && \
 #	shasum -a 256 $(BINARY_NAME) > $(BINARY_NAME).sha256
