@@ -165,18 +165,16 @@ endef
 copy_binary_to_upload_folder:
 	@echo $(BINARY_NAME)
 	mkdir -p $(BUILD_DIR)/binary/
-#	cd $(GOPATH)/src/github.com/docker/swarm && \
-	
-#	$(eval filelist = $(shell ls -1 $(BINARY_NAME)_*))
-#	$(foreach dir,$(filelist),$(call mycopy,$(dir)))
-#        $(eval find_files = $(notdir $(wildcard $(BINARY_NAME)_*)))
 
-	@echo $(foreach dir2,$(notdir $(wildcard $(BINARY_NAME)_*)),$(echo $(dir2)))
-	@echo $(foreach dir2,$(notdir $(wildcard $(BINARY_NAME)_*)),$(shell cp $(dir2) $(BUILD_DIR)/binary/ ))
-
-#	ls -la
 #	ls -la $(BINARY_NAME)_*
-#	ls -la $(BUILD_DIR)/binary/
+	
+	$(eval filelist = $(shell ls $(BINARY_NAME)_*))
+	$(foreach dir,$(filelist),$(call mycopy,$(dir)))
+#	$(eval find_files = $(notdir $(wildcard $(BINARY_NAME)_*)))
+
+#	$(foreach dir2,$(notdir $(wildcard $(BINARY_NAME)_*)),$(shell echo $(dir2)))
+#	$(foreach dir2,$(notdir $(wildcard $(BINARY_NAME)_*)),$(shell cp $(dir2) $(BUILD_DIR)/binary/))
+
 
 #	cd $(BUILD_DIR)/binary/ && \
 #	shasum -a 256 $(BINARY_NAME) > $(BINARY_NAME).sha256
