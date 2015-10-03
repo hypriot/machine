@@ -170,9 +170,12 @@ copy_binary_to_upload_folder:
 #	touch $(BUILD_DIR)/binary/testtouch
 #	ls -la $(BINARY_NAME)_*
 	
-	$(eval filelist = $(shell ls $(BINARY_NAME)_*))
-	$(eval find_files = $(notdir $(wildcard $(BINARY_NAME)_*)))
-	$(foreach dir,$(find_files),$(call mycopy,$(dir)))
+#	$(eval filelist = $(shell ls $(BINARY_NAME)_*))
+#	$(eval find_files = $(notdir $(wildcard $(BINARY_NAME)_*)))
+#	$(foreach dir,$(find_files),$(call mycopy,$(dir)))
+
+	$(foreach dir,$(notdir $(wildcard $(BINARY_NAME)_*)),$(call mycopy,$(dir)))
+
 
 #	$(foreach dir2,$(notdir $(wildcard $(BINARY_NAME)_*)),$(shell echo $(dir2)))
 #	$(foreach dir2,$(notdir $(wildcard $(BINARY_NAME)_*)),$(shell cp $(dir2) $(BUILD_DIR)/binary/))
