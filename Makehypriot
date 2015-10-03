@@ -225,9 +225,9 @@ build_debian_package:
 	$(eval OS = linux)
 
 #	$(eval ARCH = amd64)
-#	$(call	deb_package,docker-machine,docker-machine_linux-amd64,$(OS),$(ARCH))
+	$(call deb_package,docker-machine,docker-machine_linux-arm,linux,armhf)
 
-	$(eval ARCHES = amd64 386 arm)
+	$(eval ARCHES = amd64 386)
 	$(foreach ARCH,$(ARCHES),$(call deb_package,docker-machine,docker-machine_$(OS)-$(ARCH),$(OS),$(ARCH)))
 
 compile:
