@@ -185,7 +185,7 @@ create_package_sha256_checksums:
 	ls -la $(BUILD_DIR)/binary/
 
 define controlfile
-Package: $(PACKAGE_NAME)\nVersion: $(PACKAGE_VERSION)\nSection: admin\nPriority: optional\nArchitecture: <ARCH>\nEssential: no\nInstalled-Size: <SIZE>\nMaintainer: blog.hypriot.com\nDescription: $(DESCRIPTION)\n$(DEPENDENCIED)
+Package: $(PACKAGE_NAME)\nVersion: $(PACKAGE_VERSION)\nSection: admin\nPriority: optional\nArchitecture: ARCH\nEssential: no\nInstalled-Size: SIZE\nMaintainer: blog.hypriot.com\nDescription: $(DESCRIPTION)\n$(DEPENDENCIED)
 endef
 export controlfile
 
@@ -206,8 +206,8 @@ define deb_package
 	# copy package control template and replace version info
 	echo $$controlfile >$(BUILD_DIR)/package/$(DEB_NAME)/DEBIAN/control
 	
-	sed s§\<SIZE\>§$(BINARY_SIZE)§g -i $(BUILD_DIR)/package/$(DEB_NAME)/DEBIAN/control
-	sed s§\<ARCH\>§$(ARCH)§g -i $(BUILD_DIR)/package/$(DEB_NAME)/DEBIAN/control
+	sed s§SIZE§$(BINARY_SIZE)§g -i $(BUILD_DIR)/package/$(DEB_NAME)/DEBIAN/control
+	sed s§ARCH§$(ARCH)§g -i $(BUILD_DIR)/package/$(DEB_NAME)/DEBIAN/control
 
 	cat $(BUILD_DIR)/package/$(DEB_NAME)/DEBIAN/control
 
