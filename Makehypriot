@@ -189,7 +189,6 @@ endef
 export controlfile
 
 define deb_package
-	@echo "build debian package"
 	$(eval PACKAGE_NAME = $(1))
 	$(eval BINARY_NAME = $(2))
 	$(eval OS = $(3))
@@ -219,7 +218,8 @@ define deb_package
 endef
 
 build_debian_package:
-	@echo $(notdir $(wildcard $(BUILD_DIR)/$(BINARY_NAME)_*))
+#	@echo $(notdir $(wildcard $(BUILD_DIR)/$(BINARY_NAME)_*))
+	@echo "build debian packages"
 #	$(foreach dir,$(shell ls $(BUILD_DIR)/binary/$(BINARY_NAME)_*),$(call deb_package,$(dir),$(dir)))
 
 	$(eval OS = linux)
