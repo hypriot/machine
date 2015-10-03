@@ -151,7 +151,7 @@ dockerpull:
 define packagecloud
 #	@echo "upload debian package to package cloud"
 	# see documentation for this api call at https://packagecloud.io/docs/api#resource_packages_method_create
-	curl -X POST https://$(PACKAGECLOUD_API_TOKEN):@packagecloud.io/api/v1/repos/$(PACKAGECLOUD_USER_REPO)/packages.json -F "package[distro_version_id]=24" -F "package[package_file]=@$(BUILD_DIR)/package/$(1).deb"
+	curl -X POST https://$(PACKAGECLOUD_API_TOKEN):@packagecloud.io/api/v1/repos/$(PACKAGECLOUD_USER_REPO)/packages.json -F "package[distro_version_id]=24" -F "package[package_file]=@$(BUILD_DIR)/package/$(1)"
 endef
 
 upload_to_packagecloud:
