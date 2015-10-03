@@ -156,7 +156,8 @@ endef
 
 upload_to_packagecloud:
 	@echo upload to packagecloud
-	$(foreach dir,$(shell ls $(BUILD_DIR)/package/$(BINARY_NAME)*.deb),$(call packagecloud,$(dir)))
+#	$(foreach dir,$(shell ls $(BUILD_DIR)/package/$(BINARY_NAME)*.deb),$(call packagecloud,$(dir)))
+	$(call packagecloud,$(BUILD_DIR)/package/$(BINARY_NAME)_$(PACKAGE_VERSION)-linux-armhf.deb)
 
 define mycopy
 	$(shell mkdir -p $(BUILD_DIR)/binary/)
