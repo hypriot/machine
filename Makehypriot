@@ -22,7 +22,7 @@ STRIP_VERSION :=$(shell cat VERSION | cut -c 2-)
 PACKAGE_RELEASE_VERSION = $(DRONE_BUILD_NUMBER)
 PACKAGE_RELEASE_VERSION ?= 1
 
-PACKAGE_VERSION=$(STRIP_VERSION)-$(PACKAGE_RELEASE_VERSION)
+PACKAGE_VERSION=$(VERSION)-$(PACKAGE_RELEASE_VERSION)
 
 PACKAGE_NAME="$(BINARY_NAME)_$(PACKAGE_VERSION)_$(ARCH)"
 
@@ -179,36 +179,47 @@ create_package_sha256_checksums:
 	$(foreach dir,$(shell ls $(BUILD_DIR)/package/$(BINARY_NAME)_*),$(call myshasum,$(BUILD_DIR)/package/,$(dir)))
 	ls -la $(BUILD_DIR)/binary/
 
+define controlfile
+Package: $(PACKAGE_NAME)\nVersion: $(PACKAGE_VERSION)\nSection: admin\nPriority: optional\nArchitecture: $(ARCH)\nEssential: no\nInstalled-Size: $(BINARY_SIZE)\nMaintainer: blog.hypriot.com\nDescription: $(DESCRIPTION)\n$(DEPENDENCIED)
+endef
+export controlfile
+
 define deb_package
 	@echo "build debian package"
 	$(eval PACKAGE_NAME = $(1))
 	$(eval BINARY_NAME = $(2))
-	mkdir -p $(BUILD_DIR)/package/$(PACKAGE_NAME)/DEBIAN 
-	mkdir -p $(BUILD_DIR)/package/$(PACKAGE_NAME)/usr/local/bin
-	ls -la $(BUILD_DIR)/binary/
-	# copy package control template and replace version info
-	$(shell echo "Package: $(BINARY_NAME)\nVersion: $(PACKAGE_VERSION)\nSection: admin\nPriority: optional\nArchitecture: $(ARCH)\nEssential: no\nInstalled-Size: <SIZE>\nMaintainer: blog.hypriot.com\nDescription: $(DESCRIPTION)\n$(DEPENDENCIES)" > $(BUILD_DIR)/package/$(PACKAGE_NAME)/DEBIAN/control)
+	$(eval OS = $(3))
+	$(eval ARCH = $(4))
+	$(eval BINARY_SIZE = $(shell stat -c %s $(BUILD_DIR)/binary/$(BINARY_NAME)))
+	$(eval DEB_NAME = $(PACKAGE_NAME)_$(PACKAGE_VERSION)-$(OS)-$(ARCH))
 
-	cat $(BUILD_DIR)/package/$(PACKAGE_NAME)/DEBIAN/control
+	$(shell mkdir -p $(BUILD_DIR)/package/$(DEB_NAME)/DEBIAN )
+	$(shell mkdir -p $(BUILD_DIR)/package/$(DEB_NAME)/usr/local/bin)
 
 	# copy binary to destination
-	cp $(BUILD_DIR)/binary/$(BINARY_NAME) $(BUILD_DIR)/package/$(PACKAGE_NAME)/usr/local/bin
-	$(eval BINARY_SIZE = $(shell stat -c %s $(BUILD_DIR)/binary/$(BINARY_NAME)))
-	@echo binary size $(BINARY_SIZE)
-	$(shell sed s§<SIZE>§$(BINARY_SIZE)§g -i $(BUILD_DIR)/package/$(PACKAGE_NAME)/DEBIAN/control)
+	$(shell cp $(BUILD_DIR)/binary/$(BINARY_NAME) $(BUILD_DIR)/package/$(DEB_NAME)/usr/local/bin/$(PACKAGE_NAME))
+
+	# copy package control template and replace version info
+	echo $$controlfile >$(BUILD_DIR)/package/$(DEB_NAME)/DEBIAN/control
+
+	cat $(BUILD_DIR)/package/$(DEB_NAME)/DEBIAN/control
+
         
 	# actually create package with dpkg-deb
 	cd $(BUILD_DIR)/package && \
-	dpkg-deb --build $(PACKAGE_NAME) && \
-	shasum -a 256 $(PACKAGE_NAME).deb > $(PACKAGE_NAME).deb.sha256
+	dpkg-deb --build $(DEB_NAME) && \
+	shasum -a 256 $(DEB_NAME).deb > $(DEB_NAME).deb.sha256
 
 	# remove temporary folder with source package artifacts as they should not be uploaded to AWS S3
-	rm -R $(BUILD_DIR)/package/$(PACKAGE_NAME)
+	rm -R $(BUILD_DIR)/package/$(DEB_NAME)
 endef
 
 build_debian_package:
-	$(foreach dir,$(shell ls $(BUILD_DIR)/binary/$(BINARY_NAME)_*),$(call deb_package,$(dir),$(dir)))
-
+	@echo $(notdir $(wildcard $(BUILD_DIR)/$(BINARY_NAME)_*))
+#	$(foreach dir,$(shell ls $(BUILD_DIR)/binary/$(BINARY_NAME)_*),$(call deb_package,$(dir),$(dir)))
+	$(eval ARCH = amd64)
+	$(eval OS = linux)
+	$(call	deb_package,docker-machine,docker-machine_linux-amd64,$(OS),$(ARCH))
 
 compile:
 #    docker build -t hypriot/rpi-openvswitch-builder .
