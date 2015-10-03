@@ -206,8 +206,8 @@ define deb_package
 	# copy package control template and replace version info
 	echo $$controlfile >$(BUILD_DIR)/package/$(DEB_NAME)/DEBIAN/control
 	
-	sed "s§<SIZE>§$(BINARY_SIZE)§g" -i $(BUILD_DIR)/package/$(DEB_NAME)/DEBIAN/control
-	sed "s§<ARCH>§$(ARCH)§g" -i $(BUILD_DIR)/package/$(DEB_NAME)/DEBIAN/control
+	sed s§<SIZE>§$(BINARY_SIZE)§g -i $(BUILD_DIR)/package/$(DEB_NAME)/DEBIAN/control
+	sed s§<ARCH>§$(ARCH)§g -i $(BUILD_DIR)/package/$(DEB_NAME)/DEBIAN/control
 
 	cat $(BUILD_DIR)/package/$(DEB_NAME)/DEBIAN/control
 
