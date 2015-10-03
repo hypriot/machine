@@ -148,11 +148,15 @@ dockerpull:
 	docker pull $(REGISTRY_URL)/$(REGISTRY_NAMESPACE)/$(BINARY_NAME):$(VERSION)
 
 # upload the created debian package to packagecloud
-upload_to_packagecloud:
-	echo "upload debian package to package cloud"
+define packagecloud
+	@echo "upload debian package to package cloud"
 	# see documentation for this api call at https://packagecloud.io/docs/api#resource_packages_method_create
-	curl -X POST https://$(PACKAGECLOUD_API_TOKEN):@packagecloud.io/api/v1/repos/$(PACKAGECLOUD_USER_REPO)/packages.json 	     -F "package[distro_version_id]=24" -F "package[package_file]=@$(BUILD_DIR)/package/$(PACKAGE_NAME).deb"
+	curl -X POST https://$(PACKAGECLOUD_API_TOKEN):@packagecloud.io/api/v1/repos/$(PACKAGECLOUD_USER_REPO)/packages.json -F "package[distro_version_id]=24" -F "package[package_file]=@$(BUILD_DIR)/package/$(1).deb"
+endef
 
+upload_to_packagecloud:
+	@echo upload to packagecloud
+	$(foreach dir,$(shell ls $(BUILD_DIR)/package/$(BINARY_NAME)*.deb),$(call packagecloud,$(dir)))
 
 define mycopy
 	$(shell mkdir -p $(BUILD_DIR)/binary/)
@@ -217,9 +221,14 @@ endef
 build_debian_package:
 	@echo $(notdir $(wildcard $(BUILD_DIR)/$(BINARY_NAME)_*))
 #	$(foreach dir,$(shell ls $(BUILD_DIR)/binary/$(BINARY_NAME)_*),$(call deb_package,$(dir),$(dir)))
-	$(eval ARCH = amd64)
+
 	$(eval OS = linux)
-	$(call	deb_package,docker-machine,docker-machine_linux-amd64,$(OS),$(ARCH))
+
+#	$(eval ARCH = amd64)
+#	$(call	deb_package,docker-machine,docker-machine_linux-amd64,$(OS),$(ARCH))
+
+	$(eval ARCHES = amd64 386 arm)
+	$(foreach ARCH,$(ARCHES),$(call deb_package,docker-machine,docker-machine_$(OS)-$(ARCH),$(OS),$(ARCH)))
 
 compile:
 #    docker build -t hypriot/rpi-openvswitch-builder .
