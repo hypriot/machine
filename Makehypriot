@@ -168,8 +168,8 @@ endef
 
 copy_binary_to_upload_folder:
 	@echo "copy bins"
-#	$(eval filelist = $(shell ls $(BINARY_NAME)_*))
-	$(foreach dir,$(notdir $(wildcard $(BINARY_NAME)_*)),$(call mycopy,$(dir)))
+#	notdir $(wildcard $(BINARY_NAME)_*)
+	$(foreach dir,$(shell ls $(BINARY_NAME)_*),$(call mycopy,$(dir)))
 
 #	$(eval BINARY_SIZE = $(shell stat -c %s $(BUILD_DIR)/binary/$(BINARY_NAME)))
 
