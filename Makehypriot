@@ -146,9 +146,10 @@ dockersave:
 dockerpull:
 	docker pull $(REGISTRY_URL)/$(REGISTRY_NAMESPACE)/$(BINARY_NAME):$(VERSION)
 
+
 # upload the created debian package to packagecloud
 define packagecloud
-	@echo "upload debian package to package cloud"
+#	@echo "upload debian package to package cloud"
 	# see documentation for this api call at https://packagecloud.io/docs/api#resource_packages_method_create
 	curl -X POST https://$(PACKAGECLOUD_API_TOKEN):@packagecloud.io/api/v1/repos/$(PACKAGECLOUD_USER_REPO)/packages.json -F "package[distro_version_id]=24" -F "package[package_file]=@$(BUILD_DIR)/package/$(1).deb"
 endef
@@ -189,17 +190,17 @@ export controlfile
 
 define deb_package
 	$(eval PACKAGE_NAME = $(1))
-	$(eval BINARY_NAME = $(2))
+	$(eval BIN_NAME = $(2))
 	$(eval OS = $(3))
 	$(eval ARCH = $(4))
-	$(eval BINARY_SIZE = $(shell stat -c %s $(BUILD_DIR)/binary/$(BINARY_NAME)))
+	$(eval BINARY_SIZE = $(shell stat -c %s $(BUILD_DIR)/binary/$(BIN_NAME)))
 	$(eval DEB_NAME = $(PACKAGE_NAME)_$(PACKAGE_VERSION)-$(OS)-$(ARCH))
 
 	$(shell mkdir -p $(BUILD_DIR)/package/$(DEB_NAME)/DEBIAN )
 	$(shell mkdir -p $(BUILD_DIR)/package/$(DEB_NAME)/usr/local/bin)
 
 	# copy binary to destination
-	$(shell cp $(BUILD_DIR)/binary/$(BINARY_NAME) $(BUILD_DIR)/package/$(DEB_NAME)/usr/local/bin/$(PACKAGE_NAME))
+	$(shell cp $(BUILD_DIR)/binary/$(BIN_NAME) $(BUILD_DIR)/package/$(DEB_NAME)/usr/local/bin/$(PACKAGE_NAME))
 
 	# copy package control template and replace version info
 	echo $$controlfile >$(BUILD_DIR)/package/$(DEB_NAME)/DEBIAN/control
