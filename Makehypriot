@@ -34,8 +34,8 @@ DOWNLOADPATH := $(shell cat DOWNLOADPATH)
 # folder to safe the results
 BUILD_DIR := $(BUILD_RESULTS)/$(BINARY_NAME)/$(DATE)_$(COMMIT_HASH)_$(VERSION)
 
-default: compile copy_binary_to_upload_folder create_binary_sha256_checksums 
-#build_debian_package upload_to_packagecloud
+default: compile copy_binary_to_upload_folder create_binary_sha256_checksums build_debian_package 
+#upload_to_packagecloud
 
 #default: download_from_S3 extract dockerbuild dockersave dockerpush
 
