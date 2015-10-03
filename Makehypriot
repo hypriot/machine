@@ -165,6 +165,7 @@ endef
 copy_binary_to_upload_folder:
 	@echo $(BINARY_NAME)
 	mkdir -p $(BUILD_DIR)/binary/
+	touch $(BUILD_DIR)/binary/testtouch
 
 #	ls -la $(BINARY_NAME)_*
 	
