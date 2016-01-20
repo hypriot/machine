@@ -42,7 +42,7 @@ build_script:
 test_script:
 #  - go test -v ./...
   # test this from a PowerShell
-  - ps: go test -v ./libmachine/shell
+  - powershell -Command go test -v ./libmachine/shell
   - go vet ./...
   - git rev-parse HEAD
   # would be great if this would work to test both shells:
