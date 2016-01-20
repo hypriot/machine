@@ -14,9 +14,9 @@ environment:
   GOPATH: c:\gopath
   matrix:
   # - GOARCH: 386
-  #   GOVERSION: 1.4.2
+  #   GOVERSION: 1.5.3
   - GOARCH: amd64
-    GOVERSION: 1.4.2
+    GOVERSION: 1.5.3
 
 clone_folder: c:\gopath\src\github.com\docker\machine
 
