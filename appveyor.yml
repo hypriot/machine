@@ -27,7 +27,11 @@ install:
   - msiexec /i go%GOVERSION%.windows-%GOARCH%.msi /q
   - go version
   - go env
-  - go get -d -v -t ./...
+  - go get github.com/golang/lint/golint
+  - go get github.com/mattn/goveralls
+  - go get golang.org/x/tools/cover
+  - go get github.com/tools/godep
+  - go get github.com/aktau/github-release
 
 build_script:
   - go test -v ./...
