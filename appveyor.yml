@@ -37,6 +37,8 @@ install:
   - go get github.com/aktau/github-release
 
 build_script:
+  - mkdir bin
+  - go build -o ./bin/docker-machine.exe ./cmd/machine.go
   - go test -v ./...
   - go vet ./...
   - git rev-parse HEAD
