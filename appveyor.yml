@@ -10,7 +10,6 @@ skip_tags: true
 
 os: Windows Server 2012 R2
 
-
 environment:
   GOPATH: c:\gopath
   # Support go1.5 vendoring (let us avoid messing with GOPATH or using godep)
@@ -39,10 +38,11 @@ install:
 build_script:
   - mkdir bin
   - go build -o ./bin/docker-machine.exe ./cmd/machine.go
-  - go test -v ./...
+
+test_script:
+#  - go test -v ./...
+  - go test -v ./libmachine/shell
   - go vet ./...
   - git rev-parse HEAD
-
-test: off
 
 deploy: off
