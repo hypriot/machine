@@ -10,8 +10,11 @@ skip_tags: true
 
 os: Windows Server 2012 R2
 
+
 environment:
   GOPATH: c:\gopath
+  # Support go1.5 vendoring (let us avoid messing with GOPATH or using godep)
+  GO15VENDOREXPERIMENT: 1
   matrix:
   # - GOARCH: 386
   #   GOVERSION: 1.5.3
