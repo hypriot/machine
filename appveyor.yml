@@ -41,8 +41,12 @@ build_script:
 
 test_script:
 #  - go test -v ./...
-  - go test -v ./libmachine/shell
+  # test this from a PowerShell
+  - ps: go test -v ./libmachine/shell
   - go vet ./...
   - git rev-parse HEAD
-
+  # would be great if this would work to test both shells:
+  - .\bin\docker-machine.exe create -d none --url http://1.2.3.4:2375 test
+  - .\bin\docker-machine.exe env test
+  - ps: .\bin\docker-machine.exe env test
 deploy: off
